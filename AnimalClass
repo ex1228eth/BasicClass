@@ -1,0 +1,68 @@
+import random
+
+class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def get_info(self):
+        return f"{self.__class__.__name__} Name: {self.name}, Age: {self.age}"
+
+class Dog(Animal):
+    def bark(self):
+        return f"{self.name} says Woof!"
+
+class Cat(Animal):
+    def meow(self):
+        return f"{self.name} says Meow!"
+
+class PetShelter:
+    def __init__(self):
+        self.pets = []
+
+    def add_pet(self, pet):
+        self.pets.append(pet)
+
+    def adopt_pet(self, name):
+        for pet in self.pets:
+            if pet.name == name:
+                self.pets.remove(pet)
+                return pet
+        return None
+
+    def show_pets(self):
+        if not self.pets:
+            return "No pets available for adoption."
+        return "\n".join(pet.get_info() for pet in self.pets)
+
+def simulate_adoptions(shelter):
+    pet_names = ["Buddy", "Mittens", "Max", "Bella", "Kitty", "Daisy"]
+    for _ in range(5):
+        name = random.choice(pet_names)
+        age = random.randint(1, 10)
+        pet_type = random.choice(["dog", "cat"])
+        if pet_type == "dog":
+            shelter.add_pet(Dog(name, age))
+        else:
+            shelter.add_pet(Cat(name, age))
+
+if __name__ == "__main__":
+    shelter = PetShelter()
+    simulate_adoptions(shelter)
+
+    print("Available Pets for Adoption:")
+    print(shelter.show_pets())
+
+    while True:
+        name = input("\nEnter the name of the pet you want to adopt (or 'exit' to quit): ")
+        if name.lower() == 'exit':
+            break
+        adopted_pet = shelter.adopt_pet(name)
+        if adopted_pet:
+            print(f"You have adopted {adopted_pet.get_info()}")
+        else:
+            print("Pet not found!")
+
+    print("\nThank you for visiting the shelter!")
+    print("Pets left for adoption:")
+    print(shelter.show_pets())
